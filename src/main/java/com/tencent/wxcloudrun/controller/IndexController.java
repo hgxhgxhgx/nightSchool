@@ -2,6 +2,7 @@ package com.tencent.wxcloudrun.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.tencent.wxcloudrun.config.ApiResponse;
+import com.tencent.wxcloudrun.dto.CourseInfoResponse;
 import com.tencent.wxcloudrun.model.bizDO.CourseInfoDO;
 import com.tencent.wxcloudrun.service.CourseInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class IndexController {
   @GetMapping("/getRecommendCourse")
   public ApiResponse getRecommendCourse() {
     log.info("getRecommendCourse in");
-    List<CourseInfoDO> limitCourse = courseInfoService.getLimitCourse(10);
+    List<CourseInfoResponse> limitCourse = courseInfoService.getLimitCourse(10);
     log.info("getRecommendCourse out");
     return ApiResponse.ok(limitCourse);
 
