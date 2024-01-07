@@ -25,6 +25,9 @@ public class CourseInfoResponse  {
     Integer totalNum;
     Integer currentNum;
     String status;
+    String detailPhotoUrl;
+    String description;
+    String content;
 
 
 }

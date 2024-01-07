@@ -8,4 +8,6 @@ import java.util.List;
 public interface CourseInfoService {
     public List<CourseInfoResponse> getLimitCourse(Integer limit);
 
+    public CourseInfoResponse getCourseById(Long id);
+
 }

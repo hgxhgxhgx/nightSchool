@@ -36,4 +36,12 @@ public class CourseInfoServiceImpl implements CourseInfoService {
             return courseInfoResponse;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public CourseInfoResponse getCourseById(Long id) {
+        CourseInfoDO courseInfoDO = courseInfoMapper.selectById(id);
+        CourseInfoResponse result = new CourseInfoResponse();
+        BeanUtils.copyProperties(courseInfoDO, result);
+        return result;
+    }
 }

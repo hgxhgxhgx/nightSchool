@@ -26,6 +26,9 @@ public class CourseInfoDO extends BaseDO implements Serializable   {
     Integer totalNum;
     Integer currentNum;
     String status;
+    String detailPhotoUrl;
+    String description;
+    String content;
 
 
 }

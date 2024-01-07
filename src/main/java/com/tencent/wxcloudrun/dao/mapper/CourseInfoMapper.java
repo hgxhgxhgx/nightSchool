@@ -1,6 +1,7 @@
 package com.tencent.wxcloudrun.dao.mapper;
 
-import com.tencent.wxcloudrun.dao.BaseMapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tencent.wxcloudrun.model.bizDO.Counter;
 import com.tencent.wxcloudrun.model.bizDO.CourseInfoDO;
 import org.apache.ibatis.annotations.*;
@@ -10,7 +11,7 @@ import org.springframework.jdbc.core.SqlProvider;
 import java.util.List;
 
 @Mapper
-public interface CourseInfoMapper   extends BaseMapper<CourseInfoDO>{
+public interface CourseInfoMapper   extends BaseMapper<CourseInfoDO> {
 
   @Select("SELECT " +
           "id, gmt_create, gmt_modify, course_name, banner_url, location, POINT, adcode, price, " +

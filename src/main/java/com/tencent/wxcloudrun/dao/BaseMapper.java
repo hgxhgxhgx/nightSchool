@@ -35,7 +35,7 @@ public interface BaseMapper<T>  {
 
     int update(@Param(Constants.ENTITY) T entity, @Param(Constants.WRAPPER) Wrapper<T> updateWrapper);
 
-    //哈讯
+    //查询
     T selectById(Serializable id);
 
     List<T> selectBatchIds(@Param(Constants.COLLECTION) Collection<? extends Serializable> idList);

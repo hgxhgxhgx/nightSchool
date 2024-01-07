@@ -39,4 +39,12 @@ public class IndexController {
 
   }
 
+  @GetMapping("/getCourseById")
+  public ApiResponse getCourseById(Long id) {
+    log.info("getCourseById in");
+    CourseInfoResponse course = courseInfoService.getCourseById(id);
+    return ApiResponse.ok(course);
+
+  }
+
 }
