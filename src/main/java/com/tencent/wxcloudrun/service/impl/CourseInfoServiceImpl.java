@@ -42,6 +42,10 @@ public class CourseInfoServiceImpl implements CourseInfoService {
         CourseInfoDO courseInfoDO = courseInfoMapper.selectById(id);
         CourseInfoResponse result = new CourseInfoResponse();
         BeanUtils.copyProperties(courseInfoDO, result);
+        //格式化时间
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        result.setStartTime(simpleDateFormat.format(courseInfoDO.getStartTime()));
+        result.setEndTime(simpleDateFormat.format(courseInfoDO.getEndTime()));
         return result;
     }
 }
