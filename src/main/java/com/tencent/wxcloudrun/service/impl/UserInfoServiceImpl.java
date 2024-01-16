@@ -3,7 +3,6 @@ package com.tencent.wxcloudrun.service.impl;
 import com.tencent.wxcloudrun.service.UserInfoService;
 import common.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.utils.HttpClientUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
