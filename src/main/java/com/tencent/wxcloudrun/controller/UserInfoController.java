@@ -3,6 +3,7 @@ package com.tencent.wxcloudrun.controller;
 
 
 import com.tencent.wxcloudrun.config.ApiResponse;
+import com.tencent.wxcloudrun.dto.UserInfoDTO;
 import com.tencent.wxcloudrun.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,12 +25,15 @@ public class UserInfoController {
      * 通过wx.login获取用户在后端注册的id，若没有注册则返回-1
      * @return
      */
-    @GetMapping("/getUserIdByJsCode")
-    public ApiResponse getUserIdByJsCode(String JsCode){
+    @GetMapping("/getUserInfoByJsCode")
+    public ApiResponse getUserInfoByJsCode(String JsCode){
         if(StringUtils.isBlank(JsCode)){
             return ApiResponse.error("JsCode不能为空");
         }
-        Object res = userInfoService.getUserIdByJsCode(JsCode);
-        return ApiResponse.ok(res);
+        UserInfoDTO userInfoDTO = userInfoService.getUserIdByJsCode(JsCode);
+        if(null == userInfoDTO){
+            return ApiResponse.ok();
+        }
+        return ApiResponse.ok(userInfoDTO);
     }
 }

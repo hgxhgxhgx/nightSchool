@@ -1,5 +1,7 @@
 package com.tencent.wxcloudrun.service;
 
+import com.tencent.wxcloudrun.dto.UserInfoDTO;
+
 public interface UserInfoService {
-    public Object getUserIdByJsCode(String JsCode);
+    public UserInfoDTO getUserIdByJsCode(String JsCode);
 }
