@@ -40,9 +40,11 @@ public class UserInfoServiceImpl implements UserInfoService {
             String openIdRes = HttpUtil.doGet(USER_INFO_URL ,param);
             JSONObject openIdObj = JSONObject.parseObject(openIdRes);
             String openId = openIdObj.getString("openid");
+
             if(StringUtils.isBlank(openId)){
                 return null;
             }
+            log.info("获取用户信息  获取到的openId为:{}",openId);
             return getUserInfoByOpenId(openId);
         } catch (Exception e){
             log.error("获取用户信息失败，e:{}",e.getMessage());
