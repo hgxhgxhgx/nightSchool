@@ -42,6 +42,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             String openId = openIdObj.getString("openid");
 
             if(StringUtils.isBlank(openId)){
+                log.info("获取用户信息 用户openId为空，result:{}",openIdRes);
                 return null;
             }
             log.info("获取用户信息  获取到的openId为:{}",openId);
