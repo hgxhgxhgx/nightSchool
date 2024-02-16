@@ -9,9 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -35,5 +33,20 @@ public class UserInfoController {
             return ApiResponse.ok();
         }
         return ApiResponse.ok(userInfoDTO);
+    }
+
+    @PostMapping("/updateLocate")
+    public ApiResponse updateLocate(@RequestBody UserInfoDTO userInfo){
+        log.info("updateLocate userInfo:{}",userInfo);
+        if(null == userInfo || null == userInfo.getId()){
+            log.error("updateLocate error, id is null, userInfo:{}",userInfo);
+            return ApiResponse.error("更新位置失败，请检查参数！");
+        }
+        Integer count = userInfoService.updateLocate(userInfo);
+        if(count == 0){
+            log.error("updateLocate error,更新成功0个，userInfo:{}",userInfo);
+            return ApiResponse.error("请检查用户id为["+ userInfo.getId()+"]是否存在");
+        }
+        return ApiResponse.ok();
     }
 }

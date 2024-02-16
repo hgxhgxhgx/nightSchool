@@ -64,4 +64,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         BeanUtils.copyProperties(userInfoDO ,userInfoDTO);
         return userInfoDTO;
     }
+
+    @Override
+    public Integer updateLocate(UserInfoDTO userInfoDTO) {
+        return userInfoMapper.updateLocateById(userInfoDTO);
+    }
 }
