@@ -31,26 +31,15 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfoDTO getUserIdByJsCode(String JsCode) {
-        Map param = new HashMap<String,String>();
-        param.put("appid",APP_ID);
-        param.put("secret",APP_SECRET);
-        param.put("js_code",JsCode);
-        param.put("grant_type",GRANT_TYPE);
-        try {
-            String openIdRes = HttpUtil.doGet(USER_INFO_URL ,param);
-            JSONObject openIdObj = JSONObject.parseObject(openIdRes);
-            String openId = openIdObj.getString("openid");
 
-            if(StringUtils.isBlank(openId)){
-                log.info("获取用户信息 用户openId为空，result:{}",openIdRes);
-                return null;
-            }
-            log.info("获取用户信息  获取到的openId为:{}",openId);
-            return getUserInfoByOpenId(openId);
-        } catch (Exception e){
-            log.error("获取用户信息失败，e:{}",e.getMessage());
-            return  null;
+
+        String openId = getOpenIdByJsCode(JsCode);
+        if(StringUtils.isBlank(openId)){
+            log.error("用户信息获取失败");
+            return null;
         }
+        return getUserInfoByOpenId(openId);
+
 
     }
 
@@ -65,8 +54,45 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoDTO;
     }
 
+    private String getOpenIdByJsCode(String JsCode){
+        Map param = new HashMap<String,String>();
+        param.put("appid",APP_ID);
+        param.put("secret",APP_SECRET);
+        param.put("js_code",JsCode);
+        param.put("grant_type",GRANT_TYPE);
+        try {
+            String openIdRes = HttpUtil.doGet(USER_INFO_URL ,param);
+            JSONObject openIdObj = JSONObject.parseObject(openIdRes);
+            String openId = openIdObj.getString("openid");
+
+            if(StringUtils.isBlank(openId)){
+                log.error("获取用户openId为空，result:{}",openIdRes);
+                return null;
+            }
+            log.info("获取用户信息  获取到的openId为:{}",openId);
+            return openId;
+        }catch (Exception e){
+            log.error("获取用户openId失败，失败原因：{}",e.getMessage());
+            return null;
+        }
+    }
+
     @Override
     public Integer updateLocate(UserInfoDTO userInfoDTO) {
         return userInfoMapper.updateLocateById(userInfoDTO);
+    }
+
+    @Override
+    public Integer registerUser(UserInfoDTO userInfoDTO, String JsCode) {
+        String openId = getOpenIdByJsCode(JsCode);
+        if(StringUtils.isBlank(openId)){
+            log.error("注册用户 用户信息注册失败，获取的openId为空，userInfo:{},JsCode:{}",userInfoDTO,JsCode);
+            return null;
+        }
+        UserInfoDO userInfoDO = new UserInfoDO();
+        BeanUtils.copyProperties(userInfoDTO,userInfoDO);
+        userInfoDO.setOpenId(openId);
+        return userInfoMapper.insert(userInfoDO);
+
     }
 }

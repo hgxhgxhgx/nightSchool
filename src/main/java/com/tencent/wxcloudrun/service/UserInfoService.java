@@ -7,4 +7,6 @@ public interface UserInfoService {
 
     public Integer updateLocate(UserInfoDTO userInfoDTO);
 
+    public Integer registerUser(UserInfoDTO userInfoDTO,String JsCode);
+
 }

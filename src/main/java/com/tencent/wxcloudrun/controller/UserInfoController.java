@@ -2,6 +2,7 @@ package com.tencent.wxcloudrun.controller;
 
 
 
+import com.alibaba.fastjson2.JSONObject;
 import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.dto.UserInfoDTO;
 import com.tencent.wxcloudrun.service.UserInfoService;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -48,5 +50,22 @@ public class UserInfoController {
             return ApiResponse.error("请检查用户id为["+ userInfo.getId()+"]是否存在");
         }
         return ApiResponse.ok();
+    }
+    @PostMapping("/registerUser")
+    public ApiResponse registerUser(@RequestBody JSONObject request){
+        log.info("用户注册 入参：{}",request);
+        String userInfo = request.getString("userInfo");
+        String jsCode = request.getString("JsCode");
+        Assert.notNull(userInfo,"用户数据为空");
+        Assert.notNull(jsCode,"jsCode为空");
+        UserInfoDTO userInfoDTO = JSONObject.parseObject(userInfo, UserInfoDTO.class);
+        Integer res = userInfoService.registerUser(userInfoDTO, jsCode);
+        if(null == res || 0 == res){
+            log.error("用户信息注册失败，request：{}",request);
+            return ApiResponse.error("用户注册失败");
+        }
+        return ApiResponse.ok("用户注册成功");
+
+
     }
 }
