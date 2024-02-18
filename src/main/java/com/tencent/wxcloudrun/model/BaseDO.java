@@ -3,7 +3,9 @@ package com.tencent.wxcloudrun.model;
 import annotation.CreatedAt;
 import annotation.Id;
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.tencent.wxcloudrun.model.enumList.GenerationType;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +17,7 @@ import java.util.Date;
 @Setter
 @FieldNameConstants
 public class BaseDO {
-    @Id(strategy = GenerationType.AUTO)
+    @TableId(type = IdType.AUTO)
     Long id;
 
     @TableField(fill = FieldFill.INSERT)

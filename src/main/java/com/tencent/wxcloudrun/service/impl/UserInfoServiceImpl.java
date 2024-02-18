@@ -89,9 +89,20 @@ public class UserInfoServiceImpl implements UserInfoService {
             log.error("注册用户 用户信息注册失败，获取的openId为空，userInfo:{},JsCode:{}",userInfoDTO,JsCode);
             return null;
         }
+        //已经存在则更新
+        UserInfoDO exitUserInfo = userInfoMapper.queryUserInfoByOpenId(openId);
+        if(exitUserInfo != null){
+            log.info("用户注册 用户已存在，进行更新操作。openId:{}，id:{},name:{}",openId,exitUserInfo.getId(),userInfoDTO.getNickName());
+            Long id = exitUserInfo.getId();
+            BeanUtils.copyProperties(userInfoDTO, exitUserInfo);
+            exitUserInfo.setId(id);
+            return userInfoMapper.updateById(exitUserInfo);
+        }
         UserInfoDO userInfoDO = new UserInfoDO();
         BeanUtils.copyProperties(userInfoDTO,userInfoDO);
         userInfoDO.setOpenId(openId);
+        userInfoDO.setUnionId(openId);
+        userInfoDO.setId(null);
         return userInfoMapper.insert(userInfoDO);
 
     }
