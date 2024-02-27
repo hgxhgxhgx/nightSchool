@@ -73,7 +73,7 @@ public class UserInfoController {
 
     }
 
-    @GetMapping("/timeZone")
+    @PostMapping("/timeZone")
     public ApiResponse timeZone(@RequestHeader(name = "x-wx-openid") String openId,@RequestBody JSONObject body){
         log.info("openId:{}",openId);
         log.info("body:{}",body);
