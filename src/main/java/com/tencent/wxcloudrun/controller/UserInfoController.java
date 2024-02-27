@@ -74,8 +74,9 @@ public class UserInfoController {
     }
 
     @GetMapping("/timeZone")
-    public ApiResponse timeZone(@RequestHeader Map<String,String> header){
-        log.info("header:{}",header);
+    public ApiResponse timeZone(@RequestHeader(name = "x-wx-openid") String openId,@RequestBody JSONObject body){
+        log.info("openId:{}",openId);
+        log.info("body:{}",body);
         log.info("获取时区");
         TimeZone aDefault = TimeZone.getDefault();
         log.info("当前时间：{}",new Date());
