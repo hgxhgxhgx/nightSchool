@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.Map;
+import java.util.TimeZone;
+
 
 @RestController
 @Slf4j
@@ -67,5 +71,16 @@ public class UserInfoController {
         return ApiResponse.ok("用户注册成功");
 
 
+    }
+
+    @GetMapping("/timeZone")
+    public ApiResponse timeZone(@RequestHeader Map<String,String> header){
+        log.info("header:{}",header);
+        log.info("获取时区");
+        TimeZone aDefault = TimeZone.getDefault();
+        log.info("当前时间：{}",new Date());
+        log.info("获取到到时区:{}",aDefault);
+
+        return null;
     }
 }
