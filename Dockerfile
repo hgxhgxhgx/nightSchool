@@ -19,7 +19,7 @@ RUN mvn -s /app/settings.xml -f /app/pom.xml clean package
 FROM alpine:3.13
 
 #设置时区
-set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+#set -eux && sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 ENV TZ Asia/Shanghai
 RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone && apk del tzdata
 
