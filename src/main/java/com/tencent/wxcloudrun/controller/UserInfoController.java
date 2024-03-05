@@ -84,4 +84,71 @@ public class UserInfoController {
 
         return null;
     }
+
+
+    @PostMapping("/applyCourse")
+    public ApiResponse applyCourse(@RequestHeader(name = "x-wx-openid") String openId,@RequestBody JSONObject body){
+        log.info("applyCourse,openId:{},body:{}",openId,body);
+        if(StringUtils.isBlank(openId)){
+            return ApiResponse.error("用户openId为空");
+        }
+        if(body == null){
+            return ApiResponse.error("入参格式错误");
+        }
+        Long courseId = body.getLong("courseId");
+        if(null == courseId){
+            return ApiResponse.error("courseId为空");
+        }
+        return ApiResponse.ok(userInfoService.applyCourse(openId, courseId));
+
+    }
+
+    @PostMapping("/cancelCourse")
+    public ApiResponse cancelCourse(@RequestHeader(name = "x-wx-openid") String openId,@RequestBody JSONObject body){
+        log.info("cancelCourse,openId:{},body:{}",openId,body);
+        if(StringUtils.isBlank(openId)){
+            return ApiResponse.error("用户openId为空");
+        }
+        if(body == null){
+            return ApiResponse.error("入参格式错误");
+        }
+        Long courseId = body.getLong("courseId");
+        if(null == courseId){
+            return ApiResponse.error("courseId为空");
+        }
+        return ApiResponse.ok(userInfoService.cancelCourse(openId, courseId));
+    }
+
+    @PostMapping("/favorite")
+    public ApiResponse favorite(@RequestHeader(name = "x-wx-openid") String openId,@RequestBody JSONObject body){
+        log.info("favorite,openId:{},body:{}",openId,body);
+        if(StringUtils.isBlank(openId)){
+            return ApiResponse.error("用户openId为空");
+        }
+        if(body == null){
+            return ApiResponse.error("入参格式错误");
+        }
+        Long courseId = body.getLong("courseId");
+        if(null == courseId){
+            return ApiResponse.error("courseId为空");
+        }
+        return ApiResponse.ok(userInfoService.favorite(openId, courseId));
+    }
+
+
+    @PostMapping("/unFavorite")
+    public ApiResponse unfavorite(@RequestHeader(name = "x-wx-openid") String openId,@RequestBody JSONObject body){
+        log.info("unfavorite,openId:{},body:{}",openId,body);
+        if(StringUtils.isBlank(openId)){
+            return ApiResponse.error("用户openId为空");
+        }
+        if(body == null){
+            return ApiResponse.error("入参格式错误");
+        }
+        Long courseId = body.getLong("courseId");
+        if(null == courseId){
+            return ApiResponse.error("courseId为空");
+        }
+        return ApiResponse.ok(userInfoService.unfavorite(openId, courseId));
+    }
 }

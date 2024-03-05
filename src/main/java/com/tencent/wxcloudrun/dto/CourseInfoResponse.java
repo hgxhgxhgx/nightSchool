@@ -28,6 +28,14 @@ public class CourseInfoResponse  {
     String detailPhotoUrl;
     String description;
     String content;
+    //新增距离和报名人数
+    String distance;
+
+    //新增是否收藏，是否报名
+    Boolean applied;
+    Boolean favorited;
+
+
 
 
 }

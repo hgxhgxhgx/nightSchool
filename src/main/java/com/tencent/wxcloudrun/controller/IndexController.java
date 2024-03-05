@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,7 @@ public class IndexController {
   CourseInfoService courseInfoService;
 
   /**
-   * 主页页面
+   * 主页推荐课程 先根据距离来推荐
    * @return API response html
    */
   @GetMapping("/getRecommendCourse")
@@ -40,11 +41,26 @@ public class IndexController {
   }
 
   @GetMapping("/getCourseById")
-  public ApiResponse getCourseById(Long id) {
-    log.info("getCourseById in");
-    CourseInfoResponse course = courseInfoService.getCourseById(id);
+  public ApiResponse getCourseById(@RequestHeader(name = "x-wx-openid") String openId,Long id) {
+    log.info("getCourseById in,openId:{},courseId:{}",openId, id);
+    CourseInfoResponse course = courseInfoService.getCourseById(openId, id);
     return ApiResponse.ok(course);
 
   }
+
+  /**
+   * 随机获取指定个数的课程
+   * @return API response html
+   */
+  @GetMapping("/getLimitCourse")
+  public ApiResponse getLimitCourse(Integer limit) {
+    log.info("getLimitCourse in");
+    List<CourseInfoResponse> limitCourse = courseInfoService.getLimitCourse(limit);
+    log.info("getLimitCourse out");
+    return ApiResponse.ok(limitCourse);
+
+  }
+
+
 
 }
