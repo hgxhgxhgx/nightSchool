@@ -56,14 +56,14 @@ public class UserInfoController {
         return ApiResponse.ok();
     }
     @PostMapping("/registerUser")
-    public ApiResponse registerUser(@RequestBody JSONObject request){
-        log.info("用户注册 入参：{}",request);
+    public ApiResponse registerUser(@RequestHeader(name = "x-wx-openid") String openId,@RequestBody JSONObject request){
+        log.info("用户注册 入参：{}，openId:{}",request, openId);
         String userInfo = request.getString("userInfo");
-        String jsCode = request.getString("JsCode");
+        //String jsCode = request.getString("JsCode");
         Assert.notNull(userInfo,"用户数据为空");
-        Assert.notNull(jsCode,"jsCode为空");
+        //Assert.notNull(jsCode,"jsCode为空");
         UserInfoDTO userInfoDTO = JSONObject.parseObject(userInfo, UserInfoDTO.class);
-        Integer res = userInfoService.registerUser(userInfoDTO, jsCode);
+        Integer res = userInfoService.registerUser(userInfoDTO, openId);
         if(null == res || 0 == res){
             log.error("用户信息注册失败，request：{}",request);
             return ApiResponse.error("用户注册失败");

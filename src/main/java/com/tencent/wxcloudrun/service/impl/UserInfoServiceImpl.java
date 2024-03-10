@@ -109,12 +109,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Integer registerUser(UserInfoDTO userInfoDTO, String JsCode) {
-        String openId = getOpenIdByJsCode(JsCode);
-        if(StringUtils.isBlank(openId)){
-            log.error("注册用户 用户信息注册失败，获取的openId为空，userInfo:{},JsCode:{}",userInfoDTO,JsCode);
-            return null;
-        }
+    public Integer registerUser(UserInfoDTO userInfoDTO, String openId) {
+//        String openId = getOpenIdByJsCode(JsCode);
+//        if(StringUtils.isBlank(openId)){
+//            log.error("注册用户 用户信息注册失败，获取的openId为空，userInfo:{},JsCode:{}",userInfoDTO,JsCode);
+//            return null;
+//        }
         //已经存在则更新
         UserInfoDO exitUserInfo = userInfoMapper.queryUserInfoByOpenId(openId);
         if(exitUserInfo != null){

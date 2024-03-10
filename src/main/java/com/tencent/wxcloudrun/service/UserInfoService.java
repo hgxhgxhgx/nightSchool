@@ -12,7 +12,7 @@ public interface UserInfoService {
 
     public Integer updateLocate(UserInfoDTO userInfoDTO);
 
-    public Integer registerUser(UserInfoDTO userInfoDTO,String JsCode);
+    public Integer registerUser(UserInfoDTO userInfoDTO,String openId);
 
     public Boolean applyCourse(String openId,Long courseId);
 
