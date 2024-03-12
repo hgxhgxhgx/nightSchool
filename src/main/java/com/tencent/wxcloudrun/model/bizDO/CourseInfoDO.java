@@ -1,7 +1,9 @@
 package com.tencent.wxcloudrun.model.bizDO;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.tencent.wxcloudrun.model.BaseDO;
+import com.tencent.wxcloudrun.model.common.CourseExtraInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,6 +31,10 @@ public class CourseInfoDO extends BaseDO implements Serializable   {
     String detailPhotoUrl;
     String description;
     String content;
+
+    String extraInfo;
+
+
 
 
 }

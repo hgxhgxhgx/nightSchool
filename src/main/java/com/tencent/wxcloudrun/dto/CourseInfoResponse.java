@@ -35,6 +35,9 @@ public class CourseInfoResponse  {
     Boolean applied;
     Boolean favorited;
 
+    //增加二维码 url
+    String extraInfo;
+
 
 
 
