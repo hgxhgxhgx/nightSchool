@@ -14,7 +14,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.TimeZone;
 
 
@@ -30,11 +29,9 @@ public class UserInfoController {
      * @return
      */
     @GetMapping("/getUserInfoByJsCode")
-    public ApiResponse getUserInfoByJsCode(String JsCode){
-        if(StringUtils.isBlank(JsCode)){
-            return ApiResponse.error("JsCode不能为空");
-        }
-        UserInfoDTO userInfoDTO = userInfoService.getUserIdByJsCode(JsCode);
+    public ApiResponse getUserInfoByJsCode(@RequestHeader(name = "x-wx-openid") String openId,
+                                           String JsCode){
+        UserInfoDTO userInfoDTO = userInfoService.getUserInfoByOpenId(openId);
         if(null == userInfoDTO){
             return ApiResponse.ok();
         }
@@ -44,13 +41,28 @@ public class UserInfoController {
     @PostMapping("/updateLocate")
     public ApiResponse updateLocate(@RequestBody UserInfoDTO userInfo){
         log.info("updateLocate userInfo:{}",userInfo);
-        if(null == userInfo || null == userInfo.getId()){
+        if(null == userInfo || null == userInfo.getId() || userInfo.getPoint() == null){
             log.error("updateLocate error, id is null, userInfo:{}",userInfo);
-            return ApiResponse.error("更新位置失败，请检查参数！");
+            return ApiResponse.error("更新位置失败，请检查参数！" + userInfo);
         }
         Integer count = userInfoService.updateLocate(userInfo);
         if(count == 0){
             log.error("updateLocate error,更新成功0个，userInfo:{}",userInfo);
+            return ApiResponse.error("请检查用户id为["+ userInfo.getId()+"]是否存在");
+        }
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/updateUserInfo")
+    public ApiResponse updateUserInfo(@RequestBody UserInfoDTO userInfo){
+        log.info("updateUserInfo userInfo:{}",userInfo);
+        if(null == userInfo || null == userInfo.getId() ){
+            log.error("updateUserInfo error, id is null, userInfo:{}",userInfo);
+            return ApiResponse.error("更新用户信息失败，请检查参数！" + userInfo);
+        }
+        Integer count = userInfoService.updateUserInfo(userInfo);
+        if(count == 0){
+            log.error("updateUserInfo error,更新成功0个，userInfo:{}",userInfo);
             return ApiResponse.error("请检查用户id为["+ userInfo.getId()+"]是否存在");
         }
         return ApiResponse.ok();

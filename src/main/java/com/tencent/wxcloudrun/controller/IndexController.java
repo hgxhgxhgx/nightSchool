@@ -5,14 +5,13 @@ import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.dto.CourseInfoResponse;
 import com.tencent.wxcloudrun.model.bizDO.CourseInfoDO;
 import com.tencent.wxcloudrun.service.CourseInfoService;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,11 +31,17 @@ public class IndexController {
    * @return API response html
    */
   @GetMapping("/getRecommendCourse")
-  public ApiResponse getRecommendCourse() {
-    log.info("getRecommendCourse in");
-    List<CourseInfoResponse> limitCourse = courseInfoService.getLimitCourse(10);
-    log.info("getRecommendCourse out");
-    return ApiResponse.ok(limitCourse);
+  public ApiResponse getRecommendCourse(@RequestHeader(name = "x-wx-openid") String openId,
+                                        @RequestParam(value = "userPoint",required = false) String userPoint,
+                                        @RequestParam(value = "pageSize",required = false,
+                                                defaultValue = "10") Integer pageSize,
+                                        @RequestParam(value = "page",required = false,
+                                                defaultValue = "1") Integer page) {
+    log.info("getRecommendCourse in,openId:{},userPoint:{},page:{},pageSize:{}",openId,userPoint,
+            page,pageSize);
+    List<CourseInfoResponse> recommendCourse = courseInfoService.getRecommendCourse(openId, userPoint
+            ,pageSize,page);
+    return ApiResponse.ok(recommendCourse);
 
   }
 

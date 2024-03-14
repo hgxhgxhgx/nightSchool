@@ -1,16 +1,13 @@
 package com.tencent.wxcloudrun.service;
 
-import com.alibaba.fastjson2.JSONObject;
-import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.dto.UserInfoDTO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 public interface UserInfoService {
-    public UserInfoDTO getUserIdByJsCode(String JsCode);
+    public UserInfoDTO getUserInfoByOpenId(String openId);
 
     public Integer updateLocate(UserInfoDTO userInfoDTO);
+
+    public Integer updateUserInfo(UserInfoDTO userInfoDTO);
 
     public Integer registerUser(UserInfoDTO userInfoDTO,String openId);
 

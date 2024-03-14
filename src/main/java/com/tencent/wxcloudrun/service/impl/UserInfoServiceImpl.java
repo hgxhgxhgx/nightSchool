@@ -53,24 +53,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     UserFavoriteMapper userFavoriteMapper;
 
-    
-    
-    @Override
-    public UserInfoDTO getUserIdByJsCode(String JsCode) {
 
-
-        String openId = getOpenIdByJsCode(JsCode);
-        if(StringUtils.isBlank(openId)){
-            log.error("用户信息获取失败");
-            return null;
-        }
-        return getUserInfoByOpenId(openId);
-
-
-    }
-
-
-    private UserInfoDTO getUserInfoByOpenId(String openId){
+    public UserInfoDTO getUserInfoByOpenId(String openId){
         UserInfoDO userInfoDO = userInfoMapper.queryUserInfoByOpenId(openId);
         if(null == userInfoDO){
             return null;
@@ -106,6 +90,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public Integer updateLocate(UserInfoDTO userInfoDTO) {
         return userInfoMapper.updateLocateById(userInfoDTO);
+    }
+
+    @Override
+    public Integer updateUserInfo(UserInfoDTO userInfoDTO) {
+        UserInfoDO userInfoDO = new UserInfoDO();
+        BeanUtils.copyProperties(userInfoDTO, userInfoDO);
+        return userInfoMapper.updateById(userInfoDO);
     }
 
     @Override

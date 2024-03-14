@@ -16,7 +16,7 @@ public interface UserInfoMapper extends BaseMapper<UserInfoDO> {
             "FROM user_info  where open_id = #{openId}")
     Long queryIdByOpenId(@Param("openId") String openId);
 
-    @Select("SELECT id,nick_name,phone,career,avatar_url " +
+    @Select("SELECT id,nick_name,phone,career,avatar_url,point " +
     "FROM user_info where open_id = #{openId}")
     UserInfoDO queryUserInfoByOpenId(@Param("openId") String openId);
 

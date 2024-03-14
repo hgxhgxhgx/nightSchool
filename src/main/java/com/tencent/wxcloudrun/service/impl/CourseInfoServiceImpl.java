@@ -11,22 +11,22 @@ import com.tencent.wxcloudrun.dto.CourseInfoResponse;
 import com.tencent.wxcloudrun.model.bizDO.CourseInfoDO;
 import com.tencent.wxcloudrun.model.bizDO.UserApplyDO;
 import com.tencent.wxcloudrun.model.bizDO.UserFavoriteDO;
+import com.tencent.wxcloudrun.model.bizDO.UserInfoDO;
+import com.tencent.wxcloudrun.model.enumList.CourseInfoStatusEnum;
 import com.tencent.wxcloudrun.model.enumList.UserApplyStatusEnum;
 import com.tencent.wxcloudrun.model.enumList.UserFavoriteStatusEnum;
 import com.tencent.wxcloudrun.service.CalDistanceService;
 import com.tencent.wxcloudrun.service.CourseInfoService;
 import com.tencent.wxcloudrun.utils.UserCourseRelationUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,9 +66,46 @@ public class CourseInfoServiceImpl implements CourseInfoService {
     }
 
     @Override
-    public List<CourseInfoResponse> getRecommendCourse(String openId) {
-        return null;
+    public List<CourseInfoResponse> getRecommendCourse(String openId, String userPoint, Integer pageSize, Integer page) {
+        QueryWrapper<CourseInfoDO> wrapper = new QueryWrapper<>();
+        wrapper.eq(Constants.STATUS, CourseInfoStatusEnum.GROUP_BOOKING.getCode());
+        List<CourseInfoDO> courseInfoDOS = courseInfoMapper.selectList(wrapper);
+        if(CollectionUtils.isEmpty(courseInfoDOS)){
+            log.error("当前没有正在组团中的课程");
+            return null;
+        }
+        //算距离
+        if(StringUtils.isBlank(userPoint)){
+            UserInfoDO userInfoDO = userInfoMapper.queryUserInfoByOpenId(openId);
+            if(userInfoDO != null && StringUtils.isNotBlank(userInfoDO.getPoint())){
+                userPoint = userInfoDO.getPoint();
+            }
+        }
+        String finalUserPoint = userPoint;
+        List<CourseInfoResponse> resTotal = courseInfoDOS.stream().map(o -> {
+            CourseInfoResponse courseInfoResponse = courseInfoToRes(o);
+            if (StringUtils.isNotBlank(finalUserPoint)) {
+                courseInfoResponse.setDistance(calDistanceService.calDistanceByPoint(finalUserPoint,
+                        courseInfoResponse.getPoint()));
+            }
+            return courseInfoResponse;
+        }).collect(Collectors.toList());
+        //排序
+        if(StringUtils.isNotBlank(finalUserPoint)){
+            resTotal.sort(new Comparator<CourseInfoResponse>() {
+                @Override
+                public int compare(CourseInfoResponse o1, CourseInfoResponse o2) {
+                    return (int) (Double.parseDouble(o1.getDistance())-Double.parseDouble(o2.getDistance()));
+                }
+            });
+        }
+        //分页
+        List<CourseInfoResponse> res =
+                resTotal.stream().skip((long) (page - 1) * pageSize).limit(pageSize).collect(Collectors.toList());
+
+        return res;
     }
+
 
     @Override
     public CourseInfoResponse getCourseById(String openId, Long id) {

@@ -8,7 +8,8 @@ import java.util.List;
 public interface CourseInfoService {
     public List<CourseInfoResponse> getLimitCourse(Integer limit);
 
-    public List<CourseInfoResponse> getRecommendCourse(String openId);
+    public List<CourseInfoResponse> getRecommendCourse(String openId,String userPoint,
+                                                       Integer pageSize,Integer page);
 
     public CourseInfoResponse getCourseById(String openId, Long id);
 
