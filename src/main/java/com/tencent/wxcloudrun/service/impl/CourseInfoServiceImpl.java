@@ -8,6 +8,7 @@ import com.tencent.wxcloudrun.dao.mapper.UserApplyMapper;
 import com.tencent.wxcloudrun.dao.mapper.UserFavoriteMapper;
 import com.tencent.wxcloudrun.dao.mapper.UserInfoMapper;
 import com.tencent.wxcloudrun.dto.CourseInfoResponse;
+import com.tencent.wxcloudrun.dto.SearchCourseRequest;
 import com.tencent.wxcloudrun.model.bizDO.CourseInfoDO;
 import com.tencent.wxcloudrun.model.bizDO.UserApplyDO;
 import com.tencent.wxcloudrun.model.bizDO.UserFavoriteDO;
@@ -66,6 +67,58 @@ public class CourseInfoServiceImpl implements CourseInfoService {
     }
 
     @Override
+    public List<CourseInfoResponse> searchCourseByCondition(String openId,
+                                                            SearchCourseRequest request) {
+        QueryWrapper<CourseInfoDO> wrapper = new QueryWrapper<>();
+        wrapper.eq(Constants.STATUS, CourseInfoStatusEnum.GROUP_BOOKING.getCode());
+        //过滤时间
+        if(request.getDateStart() != null){
+            wrapper.ge(Constants.START_TIME, request.getDateStart());
+        }
+        if(request.getDateEnd() != null){
+            wrapper.le(Constants.END_TIME, request.getDateEnd());
+        }
+        List<CourseInfoDO> courseInfoDOS = courseInfoMapper.selectList(wrapper);
+        if(CollectionUtils.isEmpty(courseInfoDOS)) {
+            log.error("searchCourseByCondition 当前没有符合筛选条件的课程");
+            return null;
+        }
+        //过滤距离和keyword
+        List<CourseInfoResponse> res =
+                courseInfoDOS.stream().filter(e -> hasKeyWord(e.getCourseName(), request.getKeyword())).map(e -> {
+                    String distance;
+                    if (StringUtils.isNotBlank(request.getUserPoint())) {
+                        distance = calDistanceService.calDistanceByPoint(request.getUserPoint(),
+                                e.getPoint());
+                    } else {
+                        distance = calDistanceService.calDistanceByOpenId(openId, e.getPoint());
+                    }
+                    if (StringUtils.isBlank(distance)) {
+                        distance = Constants.ERROR_DISTANCE;
+                    }
+                    if (request.getDistance() != null && Long.parseLong(distance) > request.getDistance() * 1000) {
+                        return null;
+                    }
+                    CourseInfoResponse courseInfoResponse = courseInfoToRes(e);
+                    courseInfoResponse.setDistance(distance);
+                    return courseInfoResponse;
+                }).filter(Objects::nonNull).sorted((o1, o2) -> (int) (Double.parseDouble(o1.getDistance()) - Double.parseDouble(o2.getDistance()))).collect(Collectors.toList());
+
+        return res;
+    }
+
+    private Boolean hasKeyWord(String courseName,String keyWorkds){
+        //todo 先是简单的包含逻辑，以后再加上复杂的筛选逻辑
+        if(StringUtils.isBlank(courseName)){
+            return false;
+        }
+        if(StringUtils.isBlank(keyWorkds)){
+            return true;
+        }
+        return courseName.contains(keyWorkds);
+    }
+
+    @Override
     public List<CourseInfoResponse> getRecommendCourse(String openId, String userPoint, Integer pageSize, Integer page) {
         QueryWrapper<CourseInfoDO> wrapper = new QueryWrapper<>();
         wrapper.eq(Constants.STATUS, CourseInfoStatusEnum.GROUP_BOOKING.getCode());
@@ -92,12 +145,7 @@ public class CourseInfoServiceImpl implements CourseInfoService {
         }).collect(Collectors.toList());
         //排序
         if(StringUtils.isNotBlank(finalUserPoint)){
-            resTotal.sort(new Comparator<CourseInfoResponse>() {
-                @Override
-                public int compare(CourseInfoResponse o1, CourseInfoResponse o2) {
-                    return (int) (Double.parseDouble(o1.getDistance())-Double.parseDouble(o2.getDistance()));
-                }
-            });
+            resTotal.sort((o1, o2) -> (int) (Double.parseDouble(o1.getDistance())-Double.parseDouble(o2.getDistance())));
         }
         //分页
         List<CourseInfoResponse> res =

@@ -14,6 +14,10 @@ public class Constants {
 
     public static final String ERROR_DISTANCE = "0.0";
 
+    public static final String START_TIME = "start_time";
+
+    public static final String END_TIME = "end_time";
+
 
 
 }
