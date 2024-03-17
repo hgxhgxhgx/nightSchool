@@ -2,6 +2,8 @@ package com.tencent.wxcloudrun.dto;
 
 import lombok.Data;
 
+import java.util.StringTokenizer;
+
 @Data
 public class SearchCourseRequest {
 
@@ -15,5 +17,9 @@ public class SearchCourseRequest {
   private String dateEnd;
 
   private String userPoint;
+
+  private Integer page;
+
+  private Integer pageSize;
 
 }

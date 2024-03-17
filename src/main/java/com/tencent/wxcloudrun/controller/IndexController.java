@@ -76,7 +76,7 @@ public class IndexController {
   @PostMapping("/searchCourse")
   public ApiResponse searchCourse(@RequestHeader(name = "x-wx-openid") String openId,
                                   @RequestBody SearchCourseRequest request) {
-    log.info("searchCourse in,request:{}",request);
+    log.info("searchCourse in,openId:{}, request:{}",openId, request);
     List<CourseInfoResponse> searchRes;
     if(request == null || (request.getDistance() == null && request.getDateStart() == null && request.getDateEnd() == null && request.getKeyword() == null)){
       searchRes = courseInfoService.getRecommendCourse(openId,request.getUserPoint(),10,1);

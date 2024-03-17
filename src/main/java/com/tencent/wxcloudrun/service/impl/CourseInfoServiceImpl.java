@@ -83,7 +83,13 @@ public class CourseInfoServiceImpl implements CourseInfoService {
             log.error("searchCourseByCondition 当前没有符合筛选条件的课程");
             return null;
         }
-        //过滤距离和keyword
+        if(request.getPage() == null){
+            request.setPage(1);
+        }
+        if(request.getPageSize() == null){
+            request.setPageSize(10);
+        }
+        //过滤距离和keyword  分页
         List<CourseInfoResponse> res =
                 courseInfoDOS.stream().filter(e -> hasKeyWord(e.getCourseName(), request.getKeyword())).map(e -> {
                     String distance;
@@ -96,13 +102,14 @@ public class CourseInfoServiceImpl implements CourseInfoService {
                     if (StringUtils.isBlank(distance)) {
                         distance = Constants.ERROR_DISTANCE;
                     }
-                    if (request.getDistance() != null && Long.parseLong(distance) > request.getDistance() * 1000) {
+                    if (request.getDistance() != null && Double.parseDouble(distance) > request.getDistance() * 1000) {
                         return null;
                     }
                     CourseInfoResponse courseInfoResponse = courseInfoToRes(e);
                     courseInfoResponse.setDistance(distance);
                     return courseInfoResponse;
-                }).filter(Objects::nonNull).sorted((o1, o2) -> (int) (Double.parseDouble(o1.getDistance()) - Double.parseDouble(o2.getDistance()))).collect(Collectors.toList());
+                }).filter(Objects::nonNull).sorted((o1, o2) -> (int) (Double.parseDouble(o1.getDistance()) - Double.parseDouble(o2.getDistance()))).
+                        skip((long) (request.getPage() - 1) * request.getPageSize()).limit(request.getPageSize()).collect(Collectors.toList());
 
         return res;
     }
