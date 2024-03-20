@@ -21,4 +21,8 @@ public class UserInfoDTO {
     String userCityCode;
 
     String point;
+
+    String wechatId;
+
+    Integer gender;
 }

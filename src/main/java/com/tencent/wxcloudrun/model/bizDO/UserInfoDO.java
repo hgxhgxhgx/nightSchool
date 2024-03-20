@@ -31,4 +31,9 @@ public class UserInfoDO extends BaseDO implements Serializable {
 
     String point;
 
+    String wechatId;
+
+    //女：0  男：1
+    Integer gender;
+
 }
