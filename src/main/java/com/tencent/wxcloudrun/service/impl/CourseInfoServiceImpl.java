@@ -147,6 +147,8 @@ public class CourseInfoServiceImpl implements CourseInfoService {
             if (StringUtils.isNotBlank(finalUserPoint)) {
                 courseInfoResponse.setDistance(calDistanceService.calDistanceByPoint(finalUserPoint,
                         courseInfoResponse.getPoint()));
+            }else {
+                courseInfoResponse.setDistance(Constants.ERROR_DISTANCE);
             }
             return courseInfoResponse;
         }).collect(Collectors.toList());

@@ -279,4 +279,16 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         return true;
     }
+
+
+    @Override
+    public String deleteByOpenId(String openId) {
+        Long userId = getUserIdByOpenId(openId);
+        if(null == userId){
+            log.error("删除用户信息 openId:{}用户未注册",openId);
+            return "用户未注册";
+        }
+        userInfoMapper.deleteById(userId);
+        return "删除成功";
+    }
 }

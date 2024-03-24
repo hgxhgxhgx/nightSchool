@@ -19,5 +19,7 @@ public interface UserInfoService {
 
     public Boolean unfavorite(String openId,Long courseId);
 
+    public String deleteByOpenId(String openId);
+
 
 }
